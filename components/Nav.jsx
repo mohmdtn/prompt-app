@@ -6,16 +6,16 @@ import { useState, useEffect } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 
 export const Nav = () => {
-  const [iseUserLoggedIn, setIsUserLoggedIn] = useState(true);
+  const {data: session} = useSession();
   const [providers, setProviders] = useState(null);
   const [toggleDropDown, setToggoleDropDown] = useState(false)
 
   useEffect(() => {
-    const setProviders = async () => {
+    const setUpProviders = async () => {
       const response = await getProviders();
       setProviders(response);
     }
-    setProviders();
+    setUpProviders();
   }, [])
 
   return (
@@ -27,11 +27,11 @@ export const Nav = () => {
       
       {/* desctop nav */}
       <div className="sm:flex hidden">
-        {iseUserLoggedIn ? (
+        {session?.user ? (
           <div className="flex gap-3 md:gap-5">
             <Link href="create-prompt" className="black_btn">Create Post</Link>
             <button type="button" className="outline_btn" onClick={signOut}>Sing Out</button>
-            <Link href="/profile"><Image src="/assets/images/logo.svg" alt="profile" width={37} height={37} className="rounded-full" /></Link>
+            <Link href="/profile"><Image loader={() => session?.user.image} src={session?.user.image} alt="profile" width={37} height={37} className="rounded-full" /></Link>
           </div>
         )
         : (
@@ -43,9 +43,9 @@ export const Nav = () => {
 
       {/* mobile nav */}
       <div className="sm:hidden flex relative">
-        {iseUserLoggedIn ? (
+        {session?.user ? (
           <div className="flex">
-            <Image src="/assets/images/logo.svg" alt="profile" width={37} height={37} className="rounded-full" onClick={() => (setToggoleDropDown((prev) => !prev))} />
+            <Image loader={() => session?.user.image} src={session?.user.image} alt="profile" width={37} height={37} className="rounded-full" onClick={() => (setToggoleDropDown((prev) => !prev))} />
             {toggleDropDown && (
               <div className="dropdown">
                 <Link href="/profile" className="dropdown_link" onClick={() => setToggoleDropDown(false)}>My Profile</Link>
