@@ -51,8 +51,8 @@ export const Nav = () => {
                 <Link href="/profile" className="dropdown_link" onClick={() => setToggoleDropDown(false)}>My Profile</Link>
                 <Link href="/create-prompt" className="dropdown_link" onClick={() => setToggoleDropDown(false)}>Create Prompt</Link>
                 <button type="button" className="mt-5 w-full black_btn" onClick={() => {
-                  setToggoleDropDown(false)
-                  signOut
+                  setToggoleDropDown(false);
+                  signOut();
                 }}>Sing Out</button>
               </div>
             )}
@@ -60,6 +60,7 @@ export const Nav = () => {
         )
         : (
           <>
+          {providers && Object.values(providers).map((provider) => <button type="button" key={provider.name} onClick={() => signIn(provider.id)} className="black_btn">Sing in</button>)}
           </>
         )}
       </div>
